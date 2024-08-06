@@ -1099,13 +1099,7 @@ function actualitzarMissatge() {
     document.getElementById('font').textContent = missatgeDiari.Titol;
 }
 
-function actualitzarComptador() {
-    const avui = new Date();
-    const dataConcert = new Date('2025-02-09');
-    const diferencia = dataConcert - avui;
-    const dies = Math.ceil(diferencia / (1000 * 60 * 60 * 24));
-    document.getElementById('comptador').textContent = `Falten ${dies} dies pel concert!`;
-}
+G:\La meva unitat\0_webs\Graccie Addams\index.html
 
 actualitzarMissatge();
 actualitzarComptador();
