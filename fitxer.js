@@ -1099,7 +1099,19 @@ function actualitzarMissatge() {
     document.getElementById('font').textContent = missatgeDiari.Titol;
 }
 
-G:\La meva unitat\0_webs\Graccie Addams\index.html
+function actualitzarComptador() {
+  const avui = new Date();
+  const dataConcert = new Date('2025-02-09T21:00:00');
+  const diferencia = dataConcert - avui;
+
+  const dies = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+  const hores = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minuts = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+  const segons = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+  document.getElementById('comptador').textContent = 
+      `Falten ${dies} dies, ${hores} hores, ${minuts} minuts i ${segons} segons pel concert!`;
+}
 
 actualitzarMissatge();
 actualitzarComptador();
