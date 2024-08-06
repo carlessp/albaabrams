@@ -1087,32 +1087,108 @@ const missatges = [
 ];
 
 
-function obtenirMissatgeDiari() {
-    const avui = new Date();
-    const indexMissatge = avui.getDate() % missatges.length;
-    return missatges[indexMissatge];
-}
+const audioMartell = new Audio('martell.mp3');
+        const audioVidres = new Audio('vidres.mp3');
+        const audioCanco = new Audio('alconcert.mp3');
 
-function actualitzarMissatge() {
-    const missatgeDiari = obtenirMissatgeDiari();
-    document.getElementById('missatge').textContent = missatgeDiari.Missatge;
-    document.getElementById('font').textContent = missatgeDiari.Titol;
-}
+        function obtenirMissatgeDiari() {
+            const avui = new Date();
+            const indexMissatge = avui.getDate() % missatges.length;
+            return missatges[indexMissatge];
+        }
 
-function actualitzarComptador() {
-  const avui = new Date();
-  const dataConcert = new Date('2025-02-09T21:00:00');
-  const diferencia = dataConcert - avui;
+        function actualitzarMissatge() {
+            const missatgeDiari = obtenirMissatgeDiari();
+            document.getElementById('missatge').textContent = missatgeDiari.Missatge;
+            document.getElementById('font').textContent = missatgeDiari.Titol;
+        }
 
-  const dies = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-  const hores = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minuts = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-  const segons = Math.floor((diferencia % (1000 * 60)) / 1000);
+        function actualitzarComptador() {
+            const avui = new Date();
+            const dataConcert = new Date('2025-02-09T21:00:00');
+            const diferencia = dataConcert - avui;
 
-  document.getElementById('comptador').textContent = 
-      `Falten ${dies} dies, ${hores} hores, ${minuts} minuts i ${segons} segons pel concert!`;
-}
+            const dies = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+            const hores = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minuts = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+            const segons = Math.floor((diferencia % (1000 * 60)) / 1000);
 
-actualitzarMissatge();
-actualitzarComptador();
-setInterval(actualitzarComptador, 86400000); // Actualitza cada dia
+            document.getElementById('comptador').textContent =
+                `${dies} dies, ${hores} hores, ${minuts} minuts i ${segons} segons!`;
+        }
+
+        let score = 0;
+        const gameContainer = document.getElementById('game-container');
+        const scoreElement = document.getElementById('score');
+
+        function startGame() {
+            document.getElementById('missatge-container').style.display = 'none';
+            gameContainer.style.display = 'flex';
+            score = 0;
+            updateScore();
+            createGameBoard();
+            audioCanco.play();
+        }
+
+        function createGameBoard() {
+            gameContainer.innerHTML = '';
+            for (let i = 0; i < 12; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'game-cell';
+                cell.onclick = () => handleCellClick(cell);
+                gameContainer.appendChild(cell);
+            }
+            setInterval(showRandomImage, 1500);
+        }
+
+        function showRandomImage() {
+            const cells = document.querySelectorAll('.game-cell');
+            cells.forEach(cell => {
+                cell.innerHTML = '';
+                cell.onclick = null;
+            });
+
+            const randomCell = cells[Math.floor(Math.random() * cells.length)];
+            const img = document.createElement('img');
+
+            if (Math.random() < 0.7) { // 70% chance for positive images
+                img.src = Math.random() < 0.5 ? 'graccie1.jpg' : 'graccie2.png';
+                img.onclick = () => handleImageClick(true);
+            } else {
+                img.src = 'kani.png';
+                img.onclick = () => handleImageClick(false);
+            }
+
+            randomCell.appendChild(img);
+            setTimeout(() => {
+                img.style.opacity = '1';
+            }, 50);
+        }
+
+        function handleImageClick(isPositive) {
+            if (isPositive) {
+                audioMartell.play();
+                score += 10;
+            } else {
+                audioVidres.play();
+                score -= 15;
+                showModal();
+            }
+            updateScore();
+        }
+        function showModal() {
+            modal.style.display = 'block';
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 500);
+        }
+
+        function updateScore() {
+            scoreElement.textContent = `Puntuació: ${score}`;
+        }
+
+        document.getElementById('font').addEventListener('click', startGame);
+
+        actualitzarMissatge();
+        actualitzarComptador();
+        setInterval(actualitzarComptador, 1000);
