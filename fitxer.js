@@ -1169,6 +1169,7 @@ const audioMartell = new Audio('martell.mp3');
             if (isPositive) {
                 audioMartell.play();
                 score += 10;
+                showModal2();
             } else {
                 audioVidres.play();
                 score -= 15;
@@ -1182,6 +1183,12 @@ const audioMartell = new Audio('martell.mp3');
                 modal.style.display = 'none';
             }, 500);
         }
+        function showModal2() {
+          modal2.style.display = 'block';
+          setTimeout(() => {
+              modal2.style.display = 'none';
+          }, 500);
+      }
 
         function updateScore() {
             scoreElement.textContent = `Puntuació: ${score}`;
